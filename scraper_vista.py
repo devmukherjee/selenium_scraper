@@ -64,3 +64,4 @@ print(product_link)
 
 print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
 
+product_link.click()
