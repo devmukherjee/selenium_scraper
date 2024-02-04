@@ -44,11 +44,15 @@ search_bar= driver.find_element("xpath",'//input[contains(@class,"site-header-se
 # products= get_products_df()
 # first_prod= products["Product Name"][0]
 # print(first_prod)
+
+"""
+Navigatting to the product
+"""
 first_prod= "Aluminum Water Bottle with Carabiner – 26 oz."
 search_bar.send_keys(first_prod)
 import time
 
-time.sleep(10)
+# time.sleep(10)
 located= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")]')))
 # actions.send_keys(Keys.ENTER)
 # actions.perform()
@@ -64,4 +68,66 @@ print(product_link)
 
 print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
 
+product_href_wo_query= product_link.get_attribute("href").split("?")[0]
+product_category= product_href_wo_query.split("/")[-2]
+print('Product category :', product_category)
+
 product_link.click()
+
+"""
+SCRAPING PRODUCT CONFIGURATIONS
+"""
+color= "Red"
+quantity= 2
+
+product_data= {}
+
+located= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
+
+if(located):
+    product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
+    print("Products name is: ",product_name)
+    
+    # finding the li tag containing the link of product in the category display span element above the
+    #product image
+    #Use wait function to ensure the section with category links is loaded.
+    #get a list of all a tags one for each category.
+    pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
+    product_category= pli[-2].text
+    # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
+    # .find_element("xpath",'//a').text 
+    # print('New Product category :', product_category.get_attribute("innerHTML"))
+    print('New Product category :', product_category)
+    
+    time.sleep(2)
+    
+    
+    print("Navigation and image now visible")
+    #clcicking the color radio button
+    color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
+    # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
+    # radio_id= color_control_label.get_attribute("for")
+    # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
+    # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
+    # actions.move_to_element(color_radio_button).perform()
+    actions.move_to_element(color_control_label)
+    actions.double_click(on_element= color_control_label)
+    actions.perform()
+    
+    #getting the quantity button
+    quantity_button= wait.until(EC.visibility_of_element_located((By.XPATH,'//div//span[@role="button"][contains(@class,"swan-legacy-listbox-button-with-label")]')))
+    quantity_button.click()
+
+    #Mind to check for quantity 250+ becuase there is no price given.
+    desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,f'//ul[@id="listbox--builder-quantity-dropdown"]//li[@data-value="{quantity}"]')))
+    desired_quantity_item.click()
+
+    list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
+    print("List price for quantity:",quantity,"is",list_price)
+
+
+
+    
+    # radio_button.click()
+
+
