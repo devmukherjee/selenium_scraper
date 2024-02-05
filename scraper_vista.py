@@ -28,7 +28,7 @@ try:
     driver.get(master_url)
     driver.maximize_window()
     driver.implicitly_wait(30)
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 50)
     
 except Exception as e:
     msg= f"ERROR: Error connecting to the url: {master_url} \n please retry: \n Exception: {e}"
@@ -134,6 +134,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             print('New Product category :', product_category)
         except Exception as e:
             print(f"Category links did not load \n Failed with the follwoing error: {e}")
+            product_category="Category Not Found"
         
         product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
         product_decoration_tech= product_decoration_item.text

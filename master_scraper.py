@@ -41,12 +41,8 @@ except Exception as e:
 #     driver.
     
 search_bar= driver.find_element("xpath",'//input[contains(@class,"site-header-search")]')
-from prod_list import get_products_df
-if(DEBUG):
-    print(get_products_df().head())
 
-# products_to_scrape_df= get_products_df()
-# for index,row in products_to_scrape_df.iterrows():
+
 
 
 
