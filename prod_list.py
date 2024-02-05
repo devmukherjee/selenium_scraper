@@ -27,7 +27,8 @@ def clean_quantitys(s):
             return final_string
 
 def to_list(s1,delimiter=","):
-    return s1.split(delimiter)
+    s= re.sub(r',\s*',",",s1)
+    return s.split(delimiter)
 
 def get_products_df():
     # root= os.getcwd()
@@ -37,7 +38,7 @@ def get_products_df():
         print(prod_list_df.head())
     
     # print(prod_list_df.columns)
-    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: to_list(clean_quantitys(x)))
+    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: to_list(clean_quantitys(x))[0:3])
     prod_list_df["Color"]=prod_list_df["Color"].map(lambda x: to_list(x))
     
     if(DEBUG):
@@ -49,5 +50,5 @@ def get_products_df():
         print(prod_list_df.dtypes)
 
     return prod_list_df
-
+get_products_df()
 #clean_quantitys("1-5,1-5")
