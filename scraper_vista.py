@@ -45,34 +45,6 @@ search_bar= driver.find_element("xpath",'//input[contains(@class,"site-header-se
 # first_prod= products["Product Name"][0]
 # print(first_prod)
 
-"""
-Navigatting to the product
-"""
-first_prod= "Aluminum Water Bottle with Carabiner – 26 oz."
-search_bar.send_keys(first_prod)
-import time
-
-# time.sleep(10)
-located= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")]')))
-# actions.send_keys(Keys.ENTER)
-# actions.perform()
-if(located):
-    product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
-    # driver.find_element("xpath",'//div[contains(@class,"search-flyout")]')
-                                #   //div[contains(@class,"search-result-analytics-section")][@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
-
-# product_link= driver.find_element("xpath",'//div[contains(@class,"search-result-analytics-section")][@data-search-analytics-section-name="Products"]')
-# [@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
-
-print(product_link)
-
-print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
-
-product_href_wo_query= product_link.get_attribute("href").split("?")[0]
-product_category= product_href_wo_query.split("/")[-2]
-print('Product category :', product_category)
-
-product_link.click()
 
 def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region="US",decoration_tech="Digital Inkjet"):
     """
@@ -109,37 +81,66 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
 
     return product_data
     
+def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum Water Bottle with Carabiner – 26 oz.",search_bar= search_bar):
+    """
+    Navigatting to the product
+    """
+    first_prod= "Aluminum Water Bottle with Carabiner – 26 oz."
+    search_bar.send_keys(first_prod)
+    import time
 
-#check pageload
-located= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
+    # time.sleep(10)
+    located= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")]')))
+    # actions.send_keys(Keys.ENTER)
+    # actions.perform()
+    if(located):
+        product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
+        # driver.find_element("xpath",'//div[contains(@class,"search-flyout")]')
+                                    #   //div[contains(@class,"search-result-analytics-section")][@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
 
-if(located):
-    product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
-    print("Products name is: ",product_name)
-    
-    # finding the li tag containing the link of product in the category display span element above the
-    #product image
-    #Use wait function to ensure the section with category links is loaded.
-    #get a list of all a tags one for each category.
-    pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
-    product_category= pli[-2].text
-    # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
-    # .find_element("xpath",'//a').text 
-    # print('New Product category :', product_category.get_attribute("innerHTML"))
-    print('New Product category :', product_category)
-    
-    product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
-    product_decoration_tech= product_decoration_item.text
-    print("Decoration Technology is: ", product_decoration_tech )
-    time.sleep(2)
-    
-    
-    print("Navigation and image now visible")
+    # product_link= driver.find_element("xpath",'//div[contains(@class,"search-result-analytics-section")][@data-search-analytics-section-name="Products"]')
+    # [@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
 
-    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color="Red",quantity=2,region="US",decoration_tech=product_decoration_tech)
-    print("Data for one configuration is:", product_data)
+    print(product_link)
 
-    
-    # radio_button.click()
+    print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
+
+
+    product_link.click()
+
+    #check pageload
+    located= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
+
+    if(located):
+        product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
+        print("Products name is: ",product_name)
+        
+        # finding the li tag containing the link of product in the category display span element above the
+        #product image
+        #Use wait function to ensure the section with category links is loaded.
+        #get a list of all a tags one for each category.
+        pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
+        product_category= pli[-2].text
+        # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
+        # .find_element("xpath",'//a').text 
+        # print('New Product category :', product_category.get_attribute("innerHTML"))
+        print('New Product category :', product_category)
+        
+        product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
+        product_decoration_tech= product_decoration_item.text
+        print("Decoration Technology is: ", product_decoration_tech )
+        time.sleep(2)
+        
+        
+        print("Navigation and image now visible")
+
+        for color in colors:
+            for quantity in quantitites:
+                product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech)
+                print("Data for one configuration is:", product_data)
+
+        
+
+scrape_all_configurations_product(colors=['Red','Blue'],quantitites=[2,3])    # radio_button.click()
 
 
