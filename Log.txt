@@ -819,3 +819,31 @@ DEBUG:selenium.webdriver.remote.remote_connection:GET http://localhost:51802/ses
 DEBUG:urllib3.connectionpool:http://localhost:51802 "GET /session/397014a4a905b1fe05b9125bc1588a29/url HTTP/1.1" 200 0
 DEBUG:selenium.webdriver.remote.remote_connection:Remote response: status=200 | data={"value":"https://www.vistaprint.com/promotional-products/drinkware/sports-water-bottles/aluminum-water-bottle-with-carabiner-26-oz?swsquery=Aluminum%20Water%20Bottle%20with%20Carabiner%20%E2%80%93%2026%20oz.&querycat=search_dropdown"} | headers=HTTPHeaderDict({'Content-Length': '235', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
 DEBUG:selenium.webdriver.remote.remote_connection:Finished Request
+ERROR:root:List price button Not Visible, Aborting data scraping for current configuration 
+ Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=121.0.6167.140)
+Stacktrace:
+	GetHandleVerifier [0x00B21673+52979]
+	(No symbol) [0x00AA7961]
+	(No symbol) [0x0098DD3D]
+	(No symbol) [0x0097239A]
+	(No symbol) [0x009EA71B]
+	(No symbol) [0x009FACB6]
+	(No symbol) [0x009E4286]
+	(No symbol) [0x009BC063]
+	(No symbol) [0x009BCECD]
+	GetHandleVerifier [0x00E38D83+3294723]
+	GetHandleVerifier [0x00E76CC2+3548482]
+	GetHandleVerifier [0x00E71C9C+3527964]
+	GetHandleVerifier [0x00BB870E+671630]
+	(No symbol) [0x00AB1EB4]
+	(No symbol) [0x00AAD808]
+	(No symbol) [0x00AAD92D]
+	(No symbol) [0x00A9F7E0]
+	BaseThreadInitThunk [0x74E96359+25]
+	RtlGetAppContainerNamedObjectPath [0x76FC87A4+228]
+	RtlGetAppContainerNamedObjectPath [0x76FC8774+180]
+
+ERROR:root:Color Not Available for the following product:
+ Product Name: 24 oz. Aluminum Water Bottle

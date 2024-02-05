@@ -182,8 +182,17 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
         log_error(f"Search flyout list failed to load: {e}")
     
     if(located):
-        # product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
-        product_link= wait.until(EC.visibility_of_all_elements_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a')))[0]
+        """
+        Three different strategies to find the relevant product 
+        """
+        #Look for match containing the search name
+        #product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
+        
+        #Look for an exact match with the search name
+        product_link= wait.until(EC.visibility_of_element_located((By.XPATH,f'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()="{search_name}"]]')))
+        
+        #Look for the most relevant product based on the websites internal search ranking
+        #product_link= wait.until(EC.visibility_of_all_elements_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a')))[0]
     else:
         log_error(f"Product link could not be found: {e}")  
         return  
@@ -340,6 +349,7 @@ if __name__=="__main__":
     #Iterate over the input data frame
 
     for index,row in products_to_scrape_df.iterrows():
-        scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
+        if(index== len(products_to_scrape_df)-1):
+            scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
 
-    output_to_csv(data_dicts_list)
+    # output_to_csv(data_dicts_list)
