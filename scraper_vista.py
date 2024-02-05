@@ -69,7 +69,10 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
     desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,f'//ul[@id="listbox--builder-quantity-dropdown"]//li[@data-value="{quantity}"]')))
     desired_quantity_item.click()
 
-    list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
+    if(quantity=="250+"):
+        list_price= 'Get_quote'
+    else:
+        list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
     print("List price for quantity:",quantity,"is",list_price)
 
     product_data={}

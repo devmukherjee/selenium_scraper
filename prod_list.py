@@ -2,6 +2,8 @@ import pandas as pd
 import os 
 import re
 
+from scrape_config import DEBUG
+
 def clean_quantitys(s):
     match= re.match(r"(\d)-(\d)",s)
     if(not match):
@@ -24,17 +26,28 @@ def clean_quantitys(s):
         else:
             return final_string
 
-
+def to_list(s1,delimiter=","):
+    return s1.split(delimiter)
 
 def get_products_df():
-    root= os.getcwd()
-    file_path= os.path.join(root,"selenium_scraper","data","Products_to_scrape.xlsx")
-    prod_list_df= pd.read_excel(file_path,skiprows=2,usecols=[1,2,3])
-    print(prod_list_df.head())
-    print(prod_list_df.columns)
-    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: clean_quantitys(x))
-    print(prod_list_df["Quantites"])
+    # root= os.getcwd()
+    file_path= os.path.join(".","data","Products_to_scrape.xlsx")
+    prod_list_df= pd.read_excel(file_path,skiprows=2,usecols=[1,2,3],engine="openpyxl")
+    if(DEBUG):
+        print(prod_list_df.head())
+    
+    # print(prod_list_df.columns)
+    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: to_list(clean_quantitys(x)))
+    prod_list_df["Color"]=prod_list_df["Color"].map(lambda x: to_list(x))
+    
+    if(DEBUG):
+        print(prod_list_df["Quantites"])
+        print("Type of first element of first element in Quantities:", type(prod_list_df["Quantites"][0][0]))
+
+        print(prod_list_df["Color"])
+        print("Type of first element of first element in Color", type(prod_list_df["Color"][0][0]))
+        print(prod_list_df.dtypes)
+
     return prod_list_df
 
 #clean_quantitys("1-5,1-5")
-get_products_df()
