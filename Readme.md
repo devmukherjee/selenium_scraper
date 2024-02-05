@@ -2,7 +2,9 @@
 
 ## Overview
 
-Selenium Scraper is a Python application designed for web scraping using the Selenium framework. It provides a simple and flexible way to automate the extraction of data from websites. This readme file will guide you through the steps to set up and run the Selenium Scraper.
+Selenium Scraper is a Python application designed for web scraping using the Selenium framework. It provides a simple and flexible way to automate the extraction of data from websites. This readme file will guide you through the steps to set up and run the Selenium Scraper. 
+
+This code is tested on the Vista Print website.
 
 ## Prerequisites
 
