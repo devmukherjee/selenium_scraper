@@ -12,8 +12,6 @@ try:
     from selenium.webdriver.support.ui import WebDriverWait
     from selenium.webdriver.support import expected_conditions as EC
 
-    from scrape_config import DEBUG
-
     import pandas as pd
     import os
     import time
@@ -266,7 +264,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             """
             for color in colors:
                 for quantity in quantitites:
-                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech)
+                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region= region,decoration_tech=product_decoration_tech)
                     print("Data for one configuration is:", product_data)
         
         elif(pattern2):
@@ -315,7 +313,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             """
             for color in colors:
                 for quantity in quantitites:
-                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech,pattern=2)
+                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region= region,decoration_tech=product_decoration_tech,pattern=2)
                     print("Data for one configuration is:", product_data)
     else:
         log_error(f"Product Page did not load details are : \n Product Search Name:{search_name} ")    
