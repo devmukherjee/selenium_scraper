@@ -847,3 +847,31 @@ Stacktrace:
 
 ERROR:root:Color Not Available for the following product:
  Product Name: 24 oz. Aluminum Water Bottle
+ERROR:root:Quantity button Not clickable, Aborting data scraping for current configuration 
+ Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=121.0.6167.140)
+Stacktrace:
+	GetHandleVerifier [0x00C61673+52979]
+	(No symbol) [0x00BE7961]
+	(No symbol) [0x00ACDD3D]
+	(No symbol) [0x00AB239A]
+	(No symbol) [0x00B2A71B]
+	(No symbol) [0x00B3ACB6]
+	(No symbol) [0x00B24286]
+	(No symbol) [0x00AFC063]
+	(No symbol) [0x00AFCECD]
+	GetHandleVerifier [0x00F78D83+3294723]
+	GetHandleVerifier [0x00FB6CC2+3548482]
+	GetHandleVerifier [0x00FB1C9C+3527964]
+	GetHandleVerifier [0x00CF870E+671630]
+	(No symbol) [0x00BF1EB4]
+	(No symbol) [0x00BED808]
+	(No symbol) [0x00BED92D]
+	(No symbol) [0x00BDF7E0]
+	BaseThreadInitThunk [0x74E96359+25]
+	RtlGetAppContainerNamedObjectPath [0x76FC87A4+228]
+	RtlGetAppContainerNamedObjectPath [0x76FC8774+180]
+
+ERROR:root:Color Not Available for the following product:
+ Product Name: Aluminum Water Bottle with Carabiner – 26 oz.

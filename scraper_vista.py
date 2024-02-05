@@ -350,7 +350,7 @@ if __name__=="__main__":
     products_to_scrape_df= get_products_df()
     
 
-    def output_to_csv(data_dict_list):
+    def output_data_to_csv(data_dict_list):
         df= pd.DataFrame(data_dict_list)
         print(df.head())
         df.to_csv(os.path.join(".","data","Output_data.csv"))
@@ -360,4 +360,4 @@ if __name__=="__main__":
     for index,row in products_to_scrape_df.iterrows():
         scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
 
-    # output_to_csv(data_dicts_list)
+    output_data_to_csv(data_dicts_list)
