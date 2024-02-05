@@ -27,12 +27,15 @@ import os
 
 actions = ActionChains(driver)
 import time
+
+from scrape_config import DEBUG,master_url,Web_Timeout,scrape_date,region,competitor
+
 try:
 
     driver.get(master_url)
     driver.maximize_window()
     driver.implicitly_wait(30)
-    wait = WebDriverWait(driver,30)
+    wait = WebDriverWait(driver, Web_Timeout)
     
 except Exception as e:
     msg= f"ERROR: Error connecting to the url: {master_url} \n please retry: \n Exception: {e}"
@@ -51,7 +54,7 @@ except Exception as e:
 # print(first_prod)
 
 
-def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region="US",decoration_tech="Digital Inkjet",pattern=1,competitor="VISTA"):
+def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region= region,decoration_tech="Digital Inkjet",pattern=1,competitor=competitor,date= scrape_date):
     """
     SCRAPING PRODUCT CONFIGURATIONS
     """
@@ -70,11 +73,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         except Exception as e:
             print(f"Color Not Available for the following product:\n Product Name: {product_name}")
             color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
-        # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
-        # radio_id= color_control_label.get_attribute("for")
-        # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
-        # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
-        # actions.move_to_element(color_radio_button).perform()
+        
         try:
             actions.move_to_element(color_control_label)
             actions.double_click(on_element= color_control_label)
@@ -121,11 +120,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         except Exception as e:
             print(f"Color Not Available for the following product:\n Product Name: {product_name}")
             color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
-        # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
-        # radio_id= color_control_label.get_attribute("for")
-        # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
-        # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
-        # actions.move_to_element(color_radio_button).perform()
+        
         try:
             actions.move_to_element(color_control_label)
             actions.double_click(on_element= color_control_label)
@@ -164,7 +159,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
     product_data["decoration_tech"]= decoration_tech
     product_data["Competitor"]= competitor
     product_data["country"]= region
-    product_data["scrape_date"]= "date"
+    product_data["scrape_date"]= date
     data_dicts_list.append(product_data)
     
     return product_data
@@ -180,22 +175,13 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
 
     # time.sleep(10)
     located= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")]')))
-    # actions.send_keys(Keys.ENTER)
-    # actions.perform()
+    
     if(located):
         # product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
         product_link= wait.until(EC.visibility_of_all_elements_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a')))[0]
-        # driver.find_element("xpath",'//div[contains(@class,"search-flyout")]')
-                                    #   //div[contains(@class,"search-result-analytics-section")][@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
-
-    # product_link= driver.find_element("xpath",'//div[contains(@class,"search-result-analytics-section")][@data-search-analytics-section-name="Products"]')
-    # [@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
-
+        
     print(product_link)
     product_href_wo_query= product_link.get_attribute("href").split("?")[0]
-
-    #print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
-    # product_name= product_link.text
 
     product_link.click()
     
@@ -236,16 +222,14 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 #get a list of all a tags one for each category.
                 pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
                 product_category= pli[-2].text
-                # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
-                # .find_element("xpath",'//a').text 
-                # print('New Product category :', product_category.get_attribute("innerHTML"))
-                print('New Product category :', product_category)
+               
+                if(DEBUG):
+                    print('New Product category :', product_category)
             except Exception as e:
                 print(f"Category links did not load \n Failed with the follwoing error: {e} /n Calculating category based on url")
                 
                 product_category= product_href_wo_query.split("/")[-2]
-                    # print('Product category :', product_category)
-                    # product_category="Category Not Found"
+                   
                 
             try:
                 product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
@@ -256,9 +240,12 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 print(f"Decoration Technology Not Found \n Failed with error: {e}")
                 product_decoration_tech= "Not Found"
             
-            
-            print("Navigation and image now visible")
+            if(DEBUG):
+                print("Navigation and image now visible")
 
+            """
+            ITERATING over all possibilitiies of configurations with colors and quantites
+            """
             for color in colors:
                 for quantity in quantitites:
                     product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech)
@@ -286,16 +273,13 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//ul[.//a[text()[contains(.,"{product_name}")]]]//a')))
                                 
                 product_category= pli[-2].text
-                # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
-                # .find_element("xpath",'//a').text 
-                # print('New Product category :', product_category.get_attribute("innerHTML"))
-                print('New Product category :', product_category)
+                
+                if(DEBUG):
+                    print('New Product category :', product_category)
             except Exception as e:
                 print(f'Category links did not load \n Failed with the following error: {e} \n Calculating category based on url')
                 product_category= product_href_wo_query.split("/")[-2]
-                    # print('Product category :', product_category)
-                    # product_category="Category Not Found"
-                
+                                  
             try:
                 product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@role="radiogroup"]//label//div[contains(@class,"swan-selection-set-tile-contents")][count(.//p)=2]')))
                 product_decoration_tech= product_decoration_item.text
@@ -306,8 +290,11 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 product_decoration_tech= "Not Found"
             
             
-            print("Navigation and image now visible")
+            if(DEBUG):print("Navigation and image now visible")
 
+            """
+            ITERATING OVER ALL PRODUCT CONFIGURATIONS
+            """
             for color in colors:
                 for quantity in quantitites:
                     product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech,pattern=2)
