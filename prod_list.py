@@ -38,7 +38,7 @@ def get_products_df():
         print(prod_list_df.head())
     
     # print(prod_list_df.columns)
-    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: to_list(clean_quantitys(x))[0:3])
+    prod_list_df["Quantites"]=prod_list_df["Quantites"].map(lambda x: to_list(clean_quantitys(x)))
     prod_list_df["Color"]=prod_list_df["Color"].map(lambda x: to_list(x))
     
     if(DEBUG):

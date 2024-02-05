@@ -316,8 +316,9 @@ def output_to_csv(data_dict_list):
     print(df.head())
     df.to_csv(os.path.join(".","data","Output_data.csv"))
 
+#Iterate over the input data frame
+
 for index,row in products_to_scrape_df.iterrows():
-    if(index==1):
-        scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
+    scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
 
 output_to_csv(data_dicts_list)
