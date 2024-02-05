@@ -133,8 +133,12 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             # print('New Product category :', product_category.get_attribute("innerHTML"))
             print('New Product category :', product_category)
         except Exception as e:
-            print(f"Category links did not load \n Failed with the follwoing error: {e}")
-            product_category="Category Not Found"
+            print(f"Category links did not load \n Failed with the follwoing error: {e}/n Calculating category based on url")
+            product_href_wo_query= product_link.get_attribute("href").split("?")[0]
+            product_category= product_href_wo_query.split("/")[-2]
+                # print('Product category :', product_category)
+                # product_category="Category Not Found"
+            
         
         product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
         product_decoration_tech= product_decoration_item.text
