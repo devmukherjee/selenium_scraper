@@ -74,35 +74,10 @@ print('Product category :', product_category)
 
 product_link.click()
 
-"""
-SCRAPING PRODUCT CONFIGURATIONS
-"""
-color= "Red"
-quantity= 2
-
-product_data= {}
-
-located= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
-
-if(located):
-    product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
-    print("Products name is: ",product_name)
-    
-    # finding the li tag containing the link of product in the category display span element above the
-    #product image
-    #Use wait function to ensure the section with category links is loaded.
-    #get a list of all a tags one for each category.
-    pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
-    product_category= pli[-2].text
-    # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
-    # .find_element("xpath",'//a').text 
-    # print('New Product category :', product_category.get_attribute("innerHTML"))
-    print('New Product category :', product_category)
-    
-    time.sleep(2)
-    
-    
-    print("Navigation and image now visible")
+def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region="US",decoration_tech="Digital Inkjet"):
+    """
+    SCRAPING PRODUCT CONFIGURATIONS
+    """
     #clcicking the color radio button
     color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
     # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
@@ -125,7 +100,44 @@ if(located):
     list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
     print("List price for quantity:",quantity,"is",list_price)
 
+    product_data={}
+    product_data["Product_Name"]= product_name
+    product_data["Product_category"]= product_category
+    product_data["Color"]= color
+    product_data["Quantity"]= quantity
+    product_data["List_Price"]= list_price
 
+    return product_data
+    
+
+#check pageload
+located= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
+
+if(located):
+    product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
+    print("Products name is: ",product_name)
+    
+    # finding the li tag containing the link of product in the category display span element above the
+    #product image
+    #Use wait function to ensure the section with category links is loaded.
+    #get a list of all a tags one for each category.
+    pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
+    product_category= pli[-2].text
+    # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
+    # .find_element("xpath",'//a').text 
+    # print('New Product category :', product_category.get_attribute("innerHTML"))
+    print('New Product category :', product_category)
+    
+    product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
+    product_decoration_tech= product_decoration_item.text
+    print("Decoration Technology is: ", product_decoration_tech )
+    time.sleep(2)
+    
+    
+    print("Navigation and image now visible")
+
+    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color="Red",quantity=2,region="US",decoration_tech=product_decoration_tech)
+    print("Data for one configuration is:", product_data)
 
     
     # radio_button.click()
