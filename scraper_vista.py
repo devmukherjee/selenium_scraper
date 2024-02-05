@@ -8,9 +8,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from scrape_config import DEBUG
 
 options = Options()
 options.add_experimental_option("detach",True)
@@ -121,14 +122,18 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
         
         # finding the li tag containing the link of product in the category display span element above the
         #product image
-        #Use wait function to ensure the section with category links is loaded.
-        #get a list of all a tags one for each category.
-        pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
-        product_category= pli[-2].text
-        # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
-        # .find_element("xpath",'//a').text 
-        # print('New Product category :', product_category.get_attribute("innerHTML"))
-        print('New Product category :', product_category)
+        
+        try:
+            #Use wait function to ensure the section with category links is loaded.
+            #get a list of all a tags one for each category.
+            pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//section[.//li//a[text()[contains(.,"{product_name}")]]]//li//a')))
+            product_category= pli[-2].text
+            # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
+            # .find_element("xpath",'//a').text 
+            # print('New Product category :', product_category.get_attribute("innerHTML"))
+            print('New Product category :', product_category)
+        except Exception as e:
+            print(f"Category links did not load \n Failed with the follwoing error: {e}")
         
         product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@id= "Overview"][@role="tabpanel"]//p[.//strong[text()[contains(.,"Decoration")]]]')))
         product_decoration_tech= product_decoration_item.text
@@ -146,5 +151,15 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
         
 
 scrape_all_configurations_product(colors=['Red','Blue'],quantitites=[2,3])    # radio_button.click()
+
+from prod_list import get_products_df
+if(DEBUG):
+    print(get_products_df().head())
+
+products_to_scrape_df= get_products_df()
+
+from scraper_vista import scrape_all_configurations_product
+for index,row in products_to_scrape_df.iterrows():
+    scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"],search_bar= search_bar)
 
 
