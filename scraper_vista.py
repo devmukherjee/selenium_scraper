@@ -22,7 +22,11 @@ driver= webdriver.Chrome(service= Service(ChromeDriverManager().install()), opti
 master_url= "https://www.vistaprint.com/"
 logger= Logger("Newlogger")
 
+import pandas as pd
+import os
+
 actions = ActionChains(driver)
+import time
 try:
 
     driver.get(master_url)
@@ -47,10 +51,12 @@ except Exception as e:
 # print(first_prod)
 
 
-def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region="US",decoration_tech="Digital Inkjet",pattern=1):
+def scrape_one_product_configuration(product_name="name",product_category="Box",color="Red",quantity=2,region="US",decoration_tech="Digital Inkjet",pattern=1,competitor="VISTA"):
     """
     SCRAPING PRODUCT CONFIGURATIONS
     """
+    list_price= 0
+
     if (pattern==1):
         """
         CODE FOR PATTERN 1 
@@ -111,7 +117,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         """
         try:
         #clcicking the color radio button
-            color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
+            color_control_label= wait.until(EC.element_to_be_clickable((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
         except Exception as e:
             print(f"Color Not Available for the following product:\n Product Name: {product_name}")
             color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
@@ -131,17 +137,21 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         #Mind to check for quantity 250+ becuase there is no price given.
         try:
             desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,'//input[@aria-label="Quantity"][@inputmode="numeric"]')))
+            desired_quantity_item.clear()
+            time.sleep(1)
             desired_quantity_item.send_keys(quantity)
+            time.sleep(5)
+                        
         except Exception as e:
             print(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
             return        
         try:
-            list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//span[contains(@class,"swan-pricing")]//span[contains(@class,"swan-list-price")]'))).text
+            list_price= wait.until(EC.visibility_of_element_located((By.XPATH,'//span[contains(@class,"swan-pricing")]//span[contains(@class,"swan-list-price")]'))).text
         except Exception as e:
             print(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
             return  
 
-        desired_quantity_item.clear()
+        driver.implicitly_wait(2)
         print("List price for quantity:",quantity,"is",list_price)
 
     product_data={}
@@ -151,6 +161,12 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
     product_data["Quantity"]= quantity
     product_data["List_Price"]= list_price
     product_data["url"]= driver.current_url
+    product_data["decoration_tech"]= decoration_tech
+    product_data["Competitor"]= competitor
+    product_data["country"]= region
+    product_data["scrape_date"]= "date"
+    data_dicts_list.append(product_data)
+    
     return product_data
     
 def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum Water Bottle with Carabiner – 26 oz."):
@@ -160,7 +176,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     search_bar= driver.find_element("xpath",'//input[contains(@class,"site-header-search")]')
     first_prod= "Aluminum Water Bottle with Carabiner – 26 oz."
     search_bar.send_keys(search_name)
-    import time
+   
 
     # time.sleep(10)
     located= wait.until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")]')))
@@ -267,7 +283,8 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             try:
                 #Use wait function to ensure the section with category links is loaded.
                 #get a list of all a tags one for each category.
-                pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//li[.//a[text()[contains(.,"{product_name}")]]]//a')))
+                pli= wait.until(EC.visibility_of_all_elements_located(("xpath",f'//ul[.//a[text()[contains(.,"{product_name}")]]]//a')))
+                                
                 product_category= pli[-2].text
                 # product_category= pli.find_element("xpath","preceding-sibling::*[1]").find_element()
                 # .find_element("xpath",'//a').text 
@@ -305,8 +322,15 @@ if(DEBUG):
     print(get_products_df().head())
 
 products_to_scrape_df= get_products_df()
+data_dicts_list= []
+
+def output_to_csv(data_dict_list):
+    df= pd.DataFrame(data_dict_list)
+    print(df.head())
+    df.to_csv(os.path.join(".","data","Output_data.csv"))
 
 for index,row in products_to_scrape_df.iterrows():
-    scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
+    if(index==1):
+        scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
 
-
+output_to_csv(data_dicts_list)
