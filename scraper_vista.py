@@ -28,7 +28,7 @@ try:
     driver.get(master_url)
     driver.maximize_window()
     driver.implicitly_wait(30)
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 10)
     
 except Exception as e:
     msg= f"ERROR: Error connecting to the url: {master_url} \n please retry: \n Exception: {e}"
@@ -56,7 +56,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
     except Exception as e:
         print("Color Not Available for the following product:\n Product Name: {product_name}")
-        color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]]')))[0]
+        color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]]')))[0]
     # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
     # radio_id= color_control_label.get_attribute("for")
     # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
@@ -185,16 +185,15 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     else:
         print("Product Page did not load details are : \n Product Search Name:{search_name} ")    
 
-scrape_all_configurations_product(colors=['Red','Blue'],quantitites=[2,3])    # radio_button.click()
+#scrape_all_configurations_product(colors=['Red','Blue'],quantitites=[2,3])    # radio_button.click()
 
-# from prod_list import get_products_df
-# if(DEBUG):
-#     print(get_products_df().head())
+from prod_list import get_products_df
+if(DEBUG):
+    print(get_products_df().head())
 
-# products_to_scrape_df= get_products_df()
+products_to_scrape_df= get_products_df()
 
-# from scraper_vista import scrape_all_configurations_product
-# for index,row in products_to_scrape_df.iterrows():
-#     scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"],search_bar= search_bar)
+for index,row in products_to_scrape_df.iterrows():
+    scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"],search_bar= search_bar)
 
 
