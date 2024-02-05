@@ -1,3 +1,8 @@
+"""
+This is the config file used to save global config options.
+This is a single point of control for all global configuration variables.
+"""
+
 DEBUG= True
 from datetime import date
 import os

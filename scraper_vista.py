@@ -1,3 +1,12 @@
+"""
+This is the master Scraping script which runs the core functionality.
+This script initiates and loads the webdriver.
+Imports data from the file and scrapes data for all the
+product configurations in the input file.
+
+"""
+
+
 try:
     from logger import log_error
     from selenium import webdriver
