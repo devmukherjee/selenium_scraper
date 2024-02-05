@@ -28,7 +28,7 @@ try:
     driver.get(master_url)
     driver.maximize_window()
     driver.implicitly_wait(30)
-    wait = WebDriverWait(driver,5)
+    wait = WebDriverWait(driver,30)
     
 except Exception as e:
     msg= f"ERROR: Error connecting to the url: {master_url} \n please retry: \n Exception: {e}"
@@ -51,50 +51,98 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
     """
     SCRAPING PRODUCT CONFIGURATIONS
     """
-    try:
-    #clcicking the color radio button
-        color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
-    except Exception as e:
-        print(f"Color Not Available for the following product:\n Product Name: {product_name}")
-        color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
-    # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
-    # radio_id= color_control_label.get_attribute("for")
-    # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
-    # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
-    # actions.move_to_element(color_radio_button).perform()
-    try:
-        actions.move_to_element(color_control_label)
-        actions.double_click(on_element= color_control_label)
-        actions.perform()
-    except Exception as e:
-        print("Color button Not clickable, Aborting data scraping for current configuration \n {e}")
-        return
-        
-    #getting the quantity button
-    try:
-        quantity_button= wait.until(EC.visibility_of_element_located((By.XPATH,'//div//span[@role="button"][contains(@class,"swan-legacy-listbox-button-with-label")]')))
-        quantity_button.click()
-    except Exception as e:
-        print("Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
-        return
+    if (pattern==1):
+        """
+        CODE FOR PATTERN 1 
 
-    #Mind to check for quantity 250+ becuase there is no price given.
-    try:
-        desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,f'//ul[@id="listbox--builder-quantity-dropdown"]//li[@data-value="{quantity}"]')))
-        desired_quantity_item.click()
-    except Exception as e:
-        print("Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
-        return
-    
-    if(quantity=="250+"):
-        list_price= 'Get_quote'
-    else:
+        KEPT SEPERATE TO ENABLE FUTURE MODIFICATIONS AND MODULARISATION
+        """
+
         try:
-            list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
+        #clcicking the color radio button
+            color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
         except Exception as e:
-          print("List price button Not Visible, Aborting data scraping for current configuration \n {e}")
-          return  
-    print("List price for quantity:",quantity,"is",list_price)
+            print(f"Color Not Available for the following product:\n Product Name: {product_name}")
+            color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
+        # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
+        # radio_id= color_control_label.get_attribute("for")
+        # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
+        # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
+        # actions.move_to_element(color_radio_button).perform()
+        try:
+            actions.move_to_element(color_control_label)
+            actions.double_click(on_element= color_control_label)
+            actions.perform()
+        except Exception as e:
+            print(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
+            return
+            
+        #getting the quantity button
+        try:
+            quantity_button= wait.until(EC.visibility_of_element_located((By.XPATH,'//div//span[@role="button"][contains(@class,"swan-legacy-listbox-button-with-label")]')))
+            quantity_button.click()
+        except Exception as e:
+            print(f"Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            return
+
+        #Mind to check for quantity 250+ becuase there is no price given.
+        try:
+            desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,f'//ul[@id="listbox--builder-quantity-dropdown"]//li[@data-value="{quantity}"]')))
+            desired_quantity_item.click()
+        except Exception as e:
+            print(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            return
+        
+        if(quantity=="250+"):
+            list_price= 'Get_quote'
+        else:
+            try:
+                list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
+            except Exception as e:
+                print(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
+                return  
+        print("List price for quantity:",quantity,"is",list_price)
+    
+    if (pattern==2):
+        """
+        CODE FOR PATTERN 2
+
+        KEPT SEPERATE TO ENABLE FUTURE MODIFICATIONS AND MODULARISATION
+        """
+        try:
+        #clcicking the color radio button
+            color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
+        except Exception as e:
+            print(f"Color Not Available for the following product:\n Product Name: {product_name}")
+            color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
+        # print("Auto Generated ID for radio button is: ",color_control_label.get_attribute("for"))
+        # radio_id= color_control_label.get_attribute("for")
+        # color_radio_button= driver.find_element("xpath",f'//div//input[@type="radio"][@id="{radio_id}"]')
+        # print("Auto Generated ID for radio button is: ",color_radio_button.get_attribute("id"))
+        # actions.move_to_element(color_radio_button).perform()
+        try:
+            actions.move_to_element(color_control_label)
+            actions.double_click(on_element= color_control_label)
+            actions.perform()
+        except Exception as e:
+            print(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
+            return
+            
+        #Mind to check for quantity 250+ becuase there is no price given.
+        try:
+            desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,'//input[@aria-label="Quantity"][@inputmode="numeric"]')))
+            desired_quantity_item.send_keys(quantity)
+        except Exception as e:
+            print(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            return        
+        try:
+            list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//span[contains(@class,"swan-pricing")]//span[contains(@class,"swan-list-price")]'))).text
+        except Exception as e:
+            print(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
+            return  
+
+        desired_quantity_item.clear()
+        print("List price for quantity:",quantity,"is",list_price)
 
     product_data={}
     product_data["Product_Name"]= product_name
@@ -130,8 +178,8 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     print(product_link)
     product_href_wo_query= product_link.get_attribute("href").split("?")[0]
 
-    print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
-    product_name= product_link.text
+    #print("This line is being executed: \n", product_link.get_attribute("innerHTML"))
+    # product_name= product_link.text
 
     product_link.click()
     
@@ -139,18 +187,30 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     page_load= wait.until(EC.visibility_of_element_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]')))
 
     if(page_load):
-        pattern1= 0
-        pattern2= wait.until(EC.visibility_of_element_located((By.XPATH,'//input[@aria-label="Quantity"]')))
+        
+        """
+        CODE TO CHECK FOR PRODUCT PAGE PATTERN
+        """
+        try:
+            pattern1= wait.until(EC.visibility_of_element_located((By.XPATH,'//div//span[@role="button"][contains(@class,"swan-legacy-listbox-button-with-label")]')))
+        except:
+            pattern1= None
+
+        try:
+            pattern2= wait.until(EC.visibility_of_element_located((By.XPATH,'//input[@aria-label="Quantity"]')))
+        except:
+            pattern2= None
+        
         if(pattern1):
             """
             PRODUCT PAGE PATTERN 1 CODE
             """
-            # try:
-            #     product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
-            #     print("Products name is: ",product_name)
-            # except Exception as e:
-            #     print("Product Name not found \n Failed with error {e}, \n Using url to find product name")
-            #     product_name = product_href_wo_query.split("/")[-1]
+            try:
+                product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
+                print("Products name is: ",product_name)
+            except Exception as e:
+                print("Product Name not found \n Failed with error {e}, \n Using url to find product name")
+                product_name = product_href_wo_query.split("/")[-1]
 
             # finding the li tag containing the link of product in the category display span element above the
             #product image
@@ -165,7 +225,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 # print('New Product category :', product_category.get_attribute("innerHTML"))
                 print('New Product category :', product_category)
             except Exception as e:
-                print(f"Category links did not load \n Failed with the follwoing error: {e}/n Calculating category based on url")
+                print(f"Category links did not load \n Failed with the follwoing error: {e} /n Calculating category based on url")
                 
                 product_category= product_href_wo_query.split("/")[-2]
                     # print('Product category :', product_category)
@@ -194,12 +254,12 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             PRODUCT PAGE PATTERN 2 CODE
             """
 
-            # try:
-            #     product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
-            #     print("Products name is: ",product_name)
-            # except Exception as e:
-            #     print("Product Name not found \n Failed with error {e}, \n Using url to find product name")
-            #     product_name = product_href_wo_query.split("/")[-1]
+            try:
+                product_name= driver.find_element("xpath",'//div[contains(@class,"swan-mr-5")][./div[@id="product-page-zoom-container"]]//h1[contains(@class,"swan-heading")]').text
+                print("Products name is: ",product_name)
+            except Exception as e:
+                print(f"Product Name not found \n Failed with error {e}, \n Using url to find product name")
+                product_name = product_href_wo_query.split("/")[-1]
 
             # finding the li tag containing the link of product in the category display span element above the
             #product image
@@ -214,14 +274,13 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 # print('New Product category :', product_category.get_attribute("innerHTML"))
                 print('New Product category :', product_category)
             except Exception as e:
-                print(f"Category links did not load \n Failed with the follwoing error: {e}/n Calculating category based on url")
-                
+                print(f'Category links did not load \n Failed with the following error: {e} \n Calculating category based on url')
                 product_category= product_href_wo_query.split("/")[-2]
                     # print('Product category :', product_category)
                     # product_category="Category Not Found"
                 
             try:
-                product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@role="radiogroup"]//label//div[contains(@class,"swan-selection-set-tile-contents"])]')))
+                product_decoration_item= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[@role="radiogroup"]//label//div[contains(@class,"swan-selection-set-tile-contents")][count(.//p)=2]')))
                 product_decoration_tech= product_decoration_item.text
                 print("Decoration Technology is: ", product_decoration_tech )
                 time.sleep(2)
@@ -234,10 +293,10 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
 
             for color in colors:
                 for quantity in quantitites:
-                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech)
+                    product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech,pattern=2)
                     print("Data for one configuration is:", product_data)
     else:
-        print("Product Page did not load details are : \n Product Search Name:{search_name} ")    
+        print(f"Product Page did not load details are : \n Product Search Name:{search_name} ")    
 
 # scrape_all_configurations_product(colors=['Red','Blueo'],quantitites=[2,3])    # radio_button.click()
 
