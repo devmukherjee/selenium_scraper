@@ -86,7 +86,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     Navigatting to the product
     """
     first_prod= "Aluminum Water Bottle with Carabiner – 26 oz."
-    search_bar.send_keys(first_prod)
+    search_bar.send_keys(search_name)
     import time
 
     # time.sleep(10)
@@ -94,7 +94,8 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
     # actions.send_keys(Keys.ENTER)
     # actions.perform()
     if(located):
-        product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
+        # product_link= wait.until(EC.visibility_of_element_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')))
+        product_link= wait.until(EC.visibility_of_all_elements_located((By.XPATH,'//div[contains(@class,"search-flyout")]//div[contains(@class,"search-results-analytics-section")][@data-search-analytics-section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]/a')))[0]
         # driver.find_element("xpath",'//div[contains(@class,"search-flyout")]')
                                     #   //div[contains(@class,"search-result-analytics-section")][@section-name="PRODUCTS"]//div[contains(@class,"search-result-analytics-result")]//a[.//span[text()[contains(.,"Aluminum Water Bottle with Carabiner – 26 oz.")]]]')
 
