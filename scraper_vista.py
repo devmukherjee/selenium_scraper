@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager 
-from logging import Logger
+from logger import log_error
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
@@ -20,7 +20,7 @@ options.add_argument("--incognito")
 
 driver= webdriver.Chrome(service= Service(ChromeDriverManager().install()), options= options)
 master_url= "https://www.vistaprint.com/"
-logger= Logger("Newlogger")
+# logger= Logger("Newlogger")
 
 import pandas as pd
 import os
@@ -71,7 +71,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         #clcicking the color radio button
             color_control_label= wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
         except Exception as e:
-            print(f"Color Not Available for the following product:\n Product Name: {product_name}")
+            log_error(f"Color Not Available for the following product:\n Product Name: {product_name}")
             color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
         
         try:
@@ -79,7 +79,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             actions.double_click(on_element= color_control_label)
             actions.perform()
         except Exception as e:
-            print(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
+            log_error(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
             return
             
         #getting the quantity button
@@ -87,7 +87,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             quantity_button= wait.until(EC.visibility_of_element_located((By.XPATH,'//div//span[@role="button"][contains(@class,"swan-legacy-listbox-button-with-label")]')))
             quantity_button.click()
         except Exception as e:
-            print(f"Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            log_error(f"Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
             return
 
         #Mind to check for quantity 250+ becuase there is no price given.
@@ -95,7 +95,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             desired_quantity_item= wait.until(EC.presence_of_element_located((By.XPATH,f'//ul[@id="listbox--builder-quantity-dropdown"]//li[@data-value="{quantity}"]')))
             desired_quantity_item.click()
         except Exception as e:
-            print(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            log_error(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
             return
         
         if(quantity=="250+"):
@@ -104,7 +104,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             try:
                 list_price= wait.until(EC.presence_of_element_located((By.XPATH,'//div[contains(@class,"price-block")]//span[contains(@class,"swan-list-price")]'))).text
             except Exception as e:
-                print(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
+                log_error(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
                 return  
         print("List price for quantity:",quantity,"is",list_price)
     
@@ -118,7 +118,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         #clcicking the color radio button
             color_control_label= wait.until(EC.element_to_be_clickable((By.XPATH, f'//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")][text()[contains(.,"{color}")]]]')))
         except Exception as e:
-            print(f"Color Not Available for the following product:\n Product Name: {product_name}")
+            log_error(f"Color Not Available for the following product:\n Product Name: {product_name}")
             color_control_label= wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[contains(@class,"swan-selection-set")][@role="radiogroup"]//label[.//span[contains(@class,"swan-color-swatch-accessible-label")]]')))[0]
         
         try:
@@ -126,7 +126,7 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             actions.double_click(on_element= color_control_label)
             actions.perform()
         except Exception as e:
-            print(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
+            log_error(f"Color button Not clickable, Aborting data scraping for current configuration \n {e}")
             return
             
         #Mind to check for quantity 250+ becuase there is no price given.
@@ -138,12 +138,12 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
             time.sleep(5)
                         
         except Exception as e:
-            print(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
+            log_error(f"Desired Quantity button Not clickable, Aborting data scraping for current configuration \n {e}")
             return        
         try:
             list_price= wait.until(EC.visibility_of_element_located((By.XPATH,'//span[contains(@class,"swan-pricing")]//span[contains(@class,"swan-list-price")]'))).text
         except Exception as e:
-            print(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
+            log_error(f"List price button Not Visible, Aborting data scraping for current configuration \n {e}")
             return  
 
         driver.implicitly_wait(2)
@@ -211,7 +211,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
                 print("Products name is: ",product_name)
             except Exception as e:
-                print("Product Name not found \n Failed with error {e}, \n Using url to find product name")
+                log_error("Product Name not found \n Failed with error {e}, \n Using url to find product name")
                 product_name = product_href_wo_query.split("/")[-1]
 
             # finding the li tag containing the link of product in the category display span element above the
@@ -226,7 +226,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 if(DEBUG):
                     print('New Product category :', product_category)
             except Exception as e:
-                print(f"Category links did not load \n Failed with the follwoing error: {e} /n Calculating category based on url")
+                log_error(f"Category links did not load \n Failed with the follwoing error: {e} /n Calculating category based on url")
                 
                 product_category= product_href_wo_query.split("/")[-2]
                    
@@ -237,7 +237,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 print("Decoration Technology is: ", product_decoration_tech )
                 time.sleep(2)
             except Exception as e:
-                print(f"Decoration Technology Not Found \n Failed with error: {e}")
+                log_error(f"Decoration Technology Not Found \n Failed with error: {e}")
                 product_decoration_tech= "Not Found"
             
             if(DEBUG):
@@ -261,7 +261,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 product_name= driver.find_element("xpath",'//div[contains(@class,"swan-mr-5")][./div[@id="product-page-zoom-container"]]//h1[contains(@class,"swan-heading")]').text
                 print("Products name is: ",product_name)
             except Exception as e:
-                print(f"Product Name not found \n Failed with error {e}, \n Using url to find product name")
+                log_error(f"Product Name not found \n Failed with error {e}, \n Using url to find product name")
                 product_name = product_href_wo_query.split("/")[-1]
 
             # finding the li tag containing the link of product in the category display span element above the
@@ -277,7 +277,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 if(DEBUG):
                     print('New Product category :', product_category)
             except Exception as e:
-                print(f'Category links did not load \n Failed with the following error: {e} \n Calculating category based on url')
+                log_error(f'Category links did not load \n Failed with the following error: {e} \n Calculating category based on url')
                 product_category= product_href_wo_query.split("/")[-2]
                                   
             try:
@@ -286,7 +286,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                 print("Decoration Technology is: ", product_decoration_tech )
                 time.sleep(2)
             except Exception as e:
-                print(f"Decoration Technology Not Found \n Failed with error: {e}")
+                log_error(f"Decoration Technology Not Found \n Failed with error: {e}")
                 product_decoration_tech= "Not Found"
             
             
@@ -300,7 +300,7 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
                     product_data= scrape_one_product_configuration(product_name=product_name,product_category=product_category,color= color,quantity=quantity,region="US",decoration_tech=product_decoration_tech,pattern=2)
                     print("Data for one configuration is:", product_data)
     else:
-        print(f"Product Page did not load details are : \n Product Search Name:{search_name} ")    
+        log_error(f"Product Page did not load details are : \n Product Search Name:{search_name} ")    
 
 # scrape_all_configurations_product(colors=['Red','Blueo'],quantitites=[2,3])    # radio_button.click()
 
