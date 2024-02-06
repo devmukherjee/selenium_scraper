@@ -13,3 +13,6 @@ competitor= "VISTA"
 scrape_date= date.today()
 region= "US"
 log_path= os.path.join(".","Log.txt") 
+
+products_to_scrape_file_path= os.path.join(".","data","Products_to_scrape.xlsx")
+output_data_file_path= os.path.join(".","data","Output_data.csv")

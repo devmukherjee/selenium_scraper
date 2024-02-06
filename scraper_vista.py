@@ -341,23 +341,26 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
 """
 MAIN FUNCTION
 """
-if __name__=="__main__":
+def main():
     from prod_list import get_products_df
+    from scrape_config import products_to_scrape_file_path,output_data_file_path
     #scrape_all_configurations_product(colors=['Red','Blueo'],quantitites=[2,3])    # radio_button.click()
     if(DEBUG):
         print(get_products_df().head())
 
-    products_to_scrape_df= get_products_df()
+    products_to_scrape_df= get_products_df(products_to_scrape_file_path)
     
-
-    def output_data_to_csv(data_dict_list):
+    def output_data_to_csv(data_dict_list,file_path):
         df= pd.DataFrame(data_dict_list)
         print(df.head())
-        df.to_csv(os.path.join(".","data","Output_data.csv"))
+        df.to_csv(file_path)
 
     #Iterate over the input data frame
 
     for index,row in products_to_scrape_df.iterrows():
         scrape_all_configurations_product(colors= row["Color"],quantitites=row["Quantites"],search_name= row["Product Name"])
 
-    output_data_to_csv(data_dicts_list)
+    output_data_to_csv(data_dicts_list,output_data_file_path)
+
+if __name__=="__main__":
+    main()

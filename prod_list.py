@@ -36,9 +36,9 @@ def to_list(s1,delimiter=","):
     s= re.sub(r',\s*',",",s1)
     return s.split(delimiter)
 
-def get_products_df():
+def get_products_df(file_path):
     # root= os.getcwd()
-    file_path= os.path.join(".","data","Products_to_scrape.xlsx")
+    
     prod_list_df= pd.read_excel(file_path,skiprows=2,usecols=[1,2,3],engine="openpyxl")
     if(DEBUG):
         print(prod_list_df.head())
@@ -56,5 +56,8 @@ def get_products_df():
         print(prod_list_df.dtypes)
 
     return prod_list_df
-get_products_df()
+
+if __name__=="__main__":
+    from scrape_config import products_to_scrape_file_path
+    get_products_df(products_to_scrape_file_path)
 #clean_quantitys("1-5,1-5")
