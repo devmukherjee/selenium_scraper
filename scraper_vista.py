@@ -64,6 +64,8 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         CODE FOR PATTERN 1 
 
         KEPT SEPERATE TO ENABLE FUTURE MODIFICATIONS AND MODULARISATION
+
+        Pattern 1 is is a specific webpage pattern/format.
         """
 
         try:
@@ -118,6 +120,8 @@ def scrape_one_product_configuration(product_name="name",product_category="Box",
         CODE FOR PATTERN 2
 
         KEPT SEPERATE TO ENABLE FUTURE MODIFICATIONS AND MODULARISATION
+        
+        Pattern 2 is is a specific webpage pattern/format.
         """
         try:
             #Locating the color radio button
@@ -240,6 +244,8 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
         if(pattern1):
             """
             PRODUCT PAGE PATTERN 1 CODE
+
+            Pattern 1 is is a specific webpage pattern/format.
             """
             try:
                 product_name= driver.find_element("xpath",'//div//h1[contains(@class,"product-name")]').text
@@ -289,6 +295,9 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
             
             """
             PRODUCT PAGE PATTERN 2 CODE
+
+            Pattern 2 is is a specific webpage pattern/format.
+
             """
 
             try:
