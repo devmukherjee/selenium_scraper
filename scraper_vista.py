@@ -38,7 +38,7 @@ try:
     actions = ActionChains(driver)
     data_dicts_list= []
 except Exception as e:
-    log_error("Initialisation Error: Check Selenium")
+    log_error(f"Initialisation Error: Check Selenium \n {e}")
 
 try:
     # ATTEMPT to connect to MASTER URL
