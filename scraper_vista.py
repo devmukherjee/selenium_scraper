@@ -354,9 +354,7 @@ def main():
     from prod_list import get_products_df
     from scrape_config import products_to_scrape_file_path,output_data_file_path
     #scrape_all_configurations_product(colors=['Red','Blueo'],quantitites=[2,3])    # radio_button.click()
-    if(DEBUG):
-        print(get_products_df().head())
-
+    
     products_to_scrape_df= get_products_df(products_to_scrape_file_path)
     
     def output_data_to_csv(data_dict_list,file_path):
