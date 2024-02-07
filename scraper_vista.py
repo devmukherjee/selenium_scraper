@@ -39,7 +39,7 @@ try:
     data_dicts_list= []
 except Exception as e:
     log_error(f"Initialisation Error: Check Selenium \n {e}")
-
+    exit()    
 try:
     # ATTEMPT to connect to MASTER URL
     driver.get(master_url)
@@ -50,6 +50,7 @@ try:
 except Exception as e:
     msg= f"ERROR: Error connecting to the url: {master_url} \n please retry: \n Exception: {e}"
     log_error(msg)
+    exit()
     
 
 
