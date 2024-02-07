@@ -917,3 +917,34 @@ ERROR:root:Color Not Available for the following product:
  Product Name: Aluminum Water Bottle with Carabiner – 26 oz.
 ERROR:root:Initialisation Error: Check Selenium 
  Could not reach host. Are you offline?
+ERROR:root:Quantity button Not clickable, Aborting data scraping for current configuration 
+ Message: element click intercepted: Element <span aria-haspopup="listbox" aria-labelledby="button--builder-quantity-dropdown" role="button" tabindex="0" class="swan-legacy-listbox-button-with-label" data-reach-listbox-button="" id="button--builder-quantity-dropdown">...</span> is not clickable at point (1046, 545). Other element would receive the click: <div aria-live="polite" role="status" class="swan-preloader-graphic swan-preloader-graphic-extra-large">...</div>
+  (Session info: chrome=121.0.6167.140)
+Stacktrace:
+	GetHandleVerifier [0x01001673+52979]
+	(No symbol) [0x00F87961]
+	(No symbol) [0x00E6DD3D]
+	(No symbol) [0x00EAB79B]
+	(No symbol) [0x00EA9EB7]
+	(No symbol) [0x00EA7F1B]
+	(No symbol) [0x00EA70BD]
+	(No symbol) [0x00E9E010]
+	(No symbol) [0x00EC44EC]
+	(No symbol) [0x00E9DA4E]
+	(No symbol) [0x00EC4784]
+	(No symbol) [0x00EDB3FE]
+	(No symbol) [0x00EC4286]
+	(No symbol) [0x00E9C063]
+	(No symbol) [0x00E9CECD]
+	GetHandleVerifier [0x01318D83+3294723]
+	GetHandleVerifier [0x01356CC2+3548482]
+	GetHandleVerifier [0x01351C9C+3527964]
+	GetHandleVerifier [0x0109870E+671630]
+	(No symbol) [0x00F91EB4]
+	(No symbol) [0x00F8D808]
+	(No symbol) [0x00F8D92D]
+	(No symbol) [0x00F7F7E0]
+	BaseThreadInitThunk [0x77406359+25]
+	RtlGetAppContainerNamedObjectPath [0x777D87A4+228]
+	RtlGetAppContainerNamedObjectPath [0x777D8774+180]
+

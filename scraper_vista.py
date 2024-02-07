@@ -348,6 +348,18 @@ def scrape_all_configurations_product(colors,quantitites,search_name="Aluminum W
 
 # scrape_all_configurations_product(colors=['Red','Blueo'],quantitites=[2,3])    # radio_button.click()
 
+def clean_output_df(df : pd.DataFrame):
+    df= df.drop_duplicates()
+    return df 
+
+def output_data_to_csv(data_dict_list,file_path):
+    df= pd.DataFrame(data_dict_list)
+    df= clean_output_df(df)
+    print(df.head())
+    df.to_csv(file_path)
+
+
+
 """
 MAIN FUNCTION
 """
@@ -358,11 +370,6 @@ def main():
     
     products_to_scrape_df= get_products_df(products_to_scrape_file_path)
     
-    def output_data_to_csv(data_dict_list,file_path):
-        df= pd.DataFrame(data_dict_list)
-        print(df.head())
-        df.to_csv(file_path)
-
     #Iterate over the input data frame
 
     for index,row in products_to_scrape_df.iterrows():
